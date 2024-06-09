@@ -14,13 +14,6 @@ import pendulum
 
 from utils import getToken, getTelegramFilePath
 
-
-def callTelegramAPI(method, params):
-    url = 'https://api.telegram.org/bot{}/{}'.format(getToken(), method)
-    response = requests.post(url=url, params=params)
-    print(response.json())
-    return response
-
 def createBot(logger=None):
     TOKEN = getToken()
     bot = telebot.TeleBot(token=TOKEN)

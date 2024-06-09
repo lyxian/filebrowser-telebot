@@ -11,6 +11,12 @@ def getToken():
     encrypted = bytes(os.getenv('SECRET_TELEGRAM'), 'utf-8')
     return Fernet(key).decrypt(encrypted).decode()
 
+def getMe():
+    response = callTelegramAPI('getMe')
+    if response.status_code == 200:
+        return response.json()['result']['first_name']
+    raise Exception(f'fail to call telegram/getMe')
+
 def encrypt(text, key=None):
     if key is None:
         key = bytes(os.getenv('KEY'), 'utf-8')
@@ -29,7 +35,7 @@ def decrypt(value, key=None):
         encrypted = bytes(value, 'utf-8')
     return Fernet(key).decrypt(encrypted).decode()
 
-def callTelegramAPI(method, params, apiMethod='POST', files=None):
+def callTelegramAPI(method, params='', apiMethod='POST', files=None):
     url = 'https://api.telegram.org/bot{}/{}'.format(getToken(), method)
     if apiMethod == 'POST':
         if files:

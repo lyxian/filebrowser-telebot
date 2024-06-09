@@ -8,7 +8,7 @@ import json
 import os
 
 from bot import createBot
-from utils import customLogger
+from utils import customLogger, getMe
 
 logger = customLogger(__file__)
 
@@ -80,5 +80,5 @@ if __name__ == '__main__':
 
     startThread = threading.Thread(target=start, daemon=True)
     startThread.start() # .join()
-    logger.info(f'\n[{pendulum.now().to_datetime_string()}] Starting telebot on PORT-{int(os.environ.get("PORT", 5005))}..')
+    logger.info(f'\n[{pendulum.now().to_datetime_string()}] Starting telebot ({getMe()}) on PORT-{int(os.environ.get("PORT", 5005))}..')
     app.run(debug=DEBUG_MODE, host="0.0.0.0", port=int(os.environ.get("PORT", 5005)))
