@@ -24,6 +24,7 @@ def callTelegramAPI(method, params):
 def createBot(logger=None):
     TOKEN = getToken()
     bot = telebot.TeleBot(token=TOKEN)
+    saveDir = os.getenv('APP_SAVE', 'files')
 
     validCallbacks = ['date', 'category', 'comment', 'payor', 'ratio', 'confirm']
 
@@ -45,9 +46,9 @@ def createBot(logger=None):
     def downloadPhoto(message):
         try:
             photos = sorted(message.photo, key=lambda x: x.file_size, reverse=True)
-            if not os.path.exists(f'files/{message.chat.id}'):
-                os.mkdir(f'files/{message.chat.id}')
-            savePath = os.path.join(f'files/{message.chat.id}', str(pendulum.now()).split('+')[0][:-3] + '.jpg')
+            if not os.path.exists(f'{saveDir}/{message.chat.id}'):
+                os.mkdir(f'{saveDir}/{message.chat.id}')
+            savePath = os.path.join(f'{saveDir}/{message.chat.id}', str(pendulum.now()).split('+')[0][:-3] + '.jpg')
             getTelegramFilePath(photos[0].file_id, path=savePath, logger=logger)
             bot.send_message(message.chat.id, 'downloaded photo')
         except Exception as e:
