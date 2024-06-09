@@ -48,12 +48,13 @@ def createBot(logger=None):
             photos = sorted(message.photo, key=lambda x: x.file_size, reverse=True)
             if not os.path.exists(f'{saveDir}/{message.chat.id}'):
                 os.mkdir(f'{saveDir}/{message.chat.id}')
-            savePath = os.path.join(f'{saveDir}/{message.chat.id}', str(pendulum.now()).split('+')[0][:-3] + '.jpg')
+            saveTime = str(pendulum.now()).split('+')[0][:-3]
+            savePath = os.path.join(f'{saveDir}/{message.chat.id}/{saveTime}.jpg')
             getTelegramFilePath(photos[0].file_id, path=savePath, logger=logger)
-            bot.send_message(message.chat.id, 'downloaded photo')
+            bot.send_message(message.chat.id, f'{saveTime}: downloaded photo')
         except Exception as e:
             botLogger(logger, str(e))
-            bot.send_message(message.chat.id, 'unable to download photo')
+            bot.send_message(message.chat.id, f'{saveTime}: unable to download photo')
         return
     
     return bot
