@@ -1,0 +1,17 @@
+# filebrowser-telebot
+
+Description: forwards image files from telegram to filebrowser save path
+
+```
+##Packages (list required packages & run .scripts/python-init.sh)
+cryptography==37.0.4
+requests==2.28.1
+pendulum==2.1.2
+flask==2.2.2
+Werkzeug==2.2.2
+pyyaml==6.0
+pytest==7.1.2
+
+pyTelegramBotAPI==4.4.0
+##Packages
+```
