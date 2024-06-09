@@ -4,6 +4,7 @@ import argparse
 import logging
 import yaml
 import os
+import re
 
 def getToken():
     key = bytes(os.getenv('KEY'), 'utf-8')
@@ -54,6 +55,10 @@ def getTelegramFilePath(fileId, path='', logger=None):
             print(response)
         if response.status_code == 200:
             savePath = path if path else f'files/{os.path.basename(filePath)}' 
+            savePath = savePath.replace('.jpg', '_1.jpg')
+            if os.path.exists(savePath):
+                count = len([i for i in os.listdir(os.path.dirname(savePath)) if re.sub(r'_\d*\.jpg', '_', i) in savePath]) + 1
+                savePath = savePath.replace('_1.jpg', f'_{count}.jpg')
             with open(savePath, 'wb') as file:
                 file.write(response.content)
                 if logger:

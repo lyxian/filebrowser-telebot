@@ -47,13 +47,17 @@ def createBot(logger=None):
         try:
             photos = sorted(message.photo, key=lambda x: x.file_size, reverse=True)
             try:
-                if 'forward_origin' in vars(message):
-                    saveTime = str(pendulum.from_timestamp(message.forward_origin.date, tz='Asia/Singapore')).split('+')[0]
+                if 'forward_origin' in message.json:
+                    botLogger(logger, 'using forward_origin date')
+                    saveTime = str(pendulum.from_timestamp(message.json['forward_origin']['date'], tz='Asia/Singapore')).split('+')[0]
                 else:
                     saveTime = str(pendulum.from_timestamp(message.date, tz='Asia/Singapore')).split('+')[0]
-            except:
+            except Exception as e:
+                botLogger(logger, str(e))
                 saveTime = str(pendulum.now()).split('+')[0][:-3]
             dateDir = saveTime.split('T')[0]
+            # remove all ":" "T" "-"
+            saveTime = re.sub(r':|T|-', '', saveTime)
             if not os.path.exists(f'{saveDir}/{message.chat.id}/{dateDir}'):
                 os.makedirs(f'{saveDir}/{message.chat.id}/{dateDir}')
             savePath = os.path.join(f'{saveDir}/{message.chat.id}/{dateDir}/{saveTime}.jpg')
