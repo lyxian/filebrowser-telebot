@@ -2,6 +2,10 @@
 
 Description: forwards image files from telegram to filebrowser save path
 
+Changelog
+> include saveTime, saveDir
+- create date folder (using os.makedirs)
+
 ```
 ##Packages (list required packages & run .scripts/python-init.sh)
 cryptography==37.0.4

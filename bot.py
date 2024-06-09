@@ -46,10 +46,17 @@ def createBot(logger=None):
     def downloadPhoto(message):
         try:
             photos = sorted(message.photo, key=lambda x: x.file_size, reverse=True)
-            if not os.path.exists(f'{saveDir}/{message.chat.id}'):
-                os.mkdir(f'{saveDir}/{message.chat.id}')
-            saveTime = str(pendulum.now()).split('+')[0][:-3]
-            savePath = os.path.join(f'{saveDir}/{message.chat.id}/{saveTime}.jpg')
+            try:
+                if 'forward_origin' in vars(message):
+                    saveTime = str(pendulum.from_timestamp(message.forward_origin.date, tz='Asia/Singapore')).split('+')[0]
+                else:
+                    saveTime = str(pendulum.from_timestamp(message.date, tz='Asia/Singapore')).split('+')[0]
+            except:
+                saveTime = str(pendulum.now()).split('+')[0][:-3]
+            dateDir = saveTime.split('T')[0]
+            if not os.path.exists(f'{saveDir}/{message.chat.id}/{dateDir}'):
+                os.makedirs(f'{saveDir}/{message.chat.id}/{dateDir}')
+            savePath = os.path.join(f'{saveDir}/{message.chat.id}/{dateDir}/{saveTime}.jpg')
             getTelegramFilePath(photos[0].file_id, path=savePath, logger=logger)
             bot.send_message(message.chat.id, f'{saveTime}: downloaded photo')
         except Exception as e:
