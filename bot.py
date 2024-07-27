@@ -33,10 +33,10 @@ def createBot(logger=None):
         ]
         bot.send_message(message.chat.id, '\n'.join(text))
         return
-
-
+    
     @bot.message_handler(content_types=['photo'])
     def downloadPhoto(message):
+        bot.delete_message(message.chat.id, message.id)
         try:
             photos = sorted(message.photo, key=lambda x: x.file_size, reverse=True)
             try:

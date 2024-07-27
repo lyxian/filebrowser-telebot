@@ -6,6 +6,9 @@ Changelog
 > include saveTime, saveDir
 > create date folder (using os.makedirs)
 > display bot name
+> remove sent photo
+
+- send to custom destination
 
 ```
 ##Packages (list required packages & run .scripts/python-init.sh)
