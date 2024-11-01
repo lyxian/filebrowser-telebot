@@ -67,9 +67,14 @@ def createBot(logger=None):
             dateDir = saveTime.split('T')[0]
             # remove all ":" "T" "-"
             saveTime = re.sub(r':|T|-', '', saveTime)
-            if not os.path.exists(f'{basePath}/{saveDir}/{message.chat.id}/{dateDir}'):
-                os.makedirs(f'{basePath}/{saveDir}/{message.chat.id}/{dateDir}')
-            savePath = os.path.join(f'{basePath}/{saveDir}/{message.chat.id}/{dateDir}/{saveTime}.jpg')
+            if saveDir:
+                if not os.path.exists(f'{basePath}/{saveDir}'):
+                    os.makedirs(f'{basePath}/{saveDir}')
+                savePath = os.path.join(f'{basePath}/{saveDir}/{saveTime}.jpg')
+            else:
+                if not os.path.exists(f'{basePath}/{saveDir}/{message.chat.id}/{dateDir}'):
+                    os.makedirs(f'{basePath}/{saveDir}/{message.chat.id}/{dateDir}')
+                savePath = os.path.join(f'{basePath}/{saveDir}/{message.chat.id}/{dateDir}/{saveTime}.jpg')
             getTelegramFilePath(photos[0].file_id, path=savePath, logger=logger)
             bot.send_message(message.chat.id, f'{saveTime}: downloaded photo')
         except Exception as e:
