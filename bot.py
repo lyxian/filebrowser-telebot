@@ -14,10 +14,12 @@ import pendulum
 
 from utils import getToken, getTelegramFilePath
 
+saveDir = ''
+
 def createBot(logger=None):
     TOKEN = getToken()
     bot = telebot.TeleBot(token=TOKEN)
-    saveDir = os.getenv('APP_SAVE', 'files')
+    basePath = os.getenv('APP_SAVE', '').rstrip('/')
 
     validCallbacks = ['date', 'category', 'comment', 'payor', 'ratio', 'confirm']
 
@@ -28,10 +30,24 @@ def createBot(logger=None):
 
     @bot.message_handler(commands=['start', 'help'])
     def start(message):
+        global saveDir
         text = [
-            'Hello'
+            'Hello',
+            f'/path - set save directory, dir = "{saveDir}")'
         ]
         bot.send_message(message.chat.id, '\n'.join(text))
+        return
+
+    @bot.message_handler(commands=['path'])
+    def setPath(message):
+        global saveDir
+        command = message.text.split()
+        if len(command) == 1:
+            saveDir = ''
+        else:
+            saveDir = command[1]
+        botLogger(logger, f'saveDir = {saveDir}')
+        bot.send_message(message.chat.id, f'saveDir = {saveDir}')
         return
     
     @bot.message_handler(content_types=['photo'])
@@ -51,9 +67,9 @@ def createBot(logger=None):
             dateDir = saveTime.split('T')[0]
             # remove all ":" "T" "-"
             saveTime = re.sub(r':|T|-', '', saveTime)
-            if not os.path.exists(f'{saveDir}/{message.chat.id}/{dateDir}'):
-                os.makedirs(f'{saveDir}/{message.chat.id}/{dateDir}')
-            savePath = os.path.join(f'{saveDir}/{message.chat.id}/{dateDir}/{saveTime}.jpg')
+            if not os.path.exists(f'{basePath}/{saveDir}/{message.chat.id}/{dateDir}'):
+                os.makedirs(f'{basePath}/{saveDir}/{message.chat.id}/{dateDir}')
+            savePath = os.path.join(f'{basePath}/{saveDir}/{message.chat.id}/{dateDir}/{saveTime}.jpg')
             getTelegramFilePath(photos[0].file_id, path=savePath, logger=logger)
             bot.send_message(message.chat.id, f'{saveTime}: downloaded photo')
         except Exception as e:

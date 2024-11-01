@@ -7,6 +7,7 @@ Changelog
 > create date folder (using os.makedirs)
 > display bot name
 > remove sent photo
+> set directory
 
 - send to custom destination
 
